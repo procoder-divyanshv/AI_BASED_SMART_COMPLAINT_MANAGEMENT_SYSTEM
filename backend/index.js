@@ -274,14 +274,33 @@ app.get("/api/complaints", authMiddleware, async (req, res) => {
     try {
         const complaints = await Complaint.find();
 
-        const formatted = complaints.map(c => ({
-            ...c._doc,
-            aiResponse: JSON.parse(c.aiResponse)
-        }));
+        const formatted = complaints.map(c => {
+            let parsedAI;
+
+            try {
+                parsedAI =
+                    typeof c.aiResponse === "string"
+                        ? JSON.parse(c.aiResponse)
+                        : c.aiResponse;
+            } catch (err) {
+                parsedAI = {
+                    priority: "Medium",
+                    department: "Unknown",
+                    summary: "Invalid AI response",
+                    professionalResponse: "Error parsing AI response"
+                };
+            }
+
+            return {
+                ...c._doc,
+                aiResponse: parsedAI
+            };
+        });
 
         res.json(formatted);
 
     } catch (err) {
+        console.log("GET COMPLAINT ERROR:", err);
         res.status(500).json({ error: err.message });
     }
 });
