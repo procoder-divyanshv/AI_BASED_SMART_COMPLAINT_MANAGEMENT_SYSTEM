@@ -30,8 +30,8 @@ const client = new OpenAI({
 ========================= */
 
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log("Mongo Error:", err));
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log("Mongo Error:", err));
 
 /* =========================
    HOME ROUTE
@@ -164,6 +164,11 @@ Rules:
     }
 };
 
+function fillTemplate(text, data) {
+    return text.replace(/{{(.*?)}}/g, (_, key) => {
+        return data[key.trim()] || "Customer";
+    });
+}
 /* =========================
    AUTH ROUTES
 ========================= */
@@ -242,8 +247,17 @@ app.post("/api/complaints", authMiddleware, async (req, res) => {
             return res.status(400).json({ message: "Title is required" });
         }
 
-        const aiResult = await analyzeComplaint(description);
+        let aiResult = await analyzeComplaint(description);
 
+        /* Inject customer name into AI response */
+        if (aiResult?.professionalResponse) {
+            aiResult.professionalResponse = fillTemplate(
+                aiResult.professionalResponse,
+                {
+                    customer_name: name
+                }
+            );
+        }
         const complaint = new Complaint({
             name,
             email,
