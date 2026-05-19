@@ -3,7 +3,7 @@ import {
     Routes,
     Route
 } from "react-router-dom";
-
+import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
@@ -36,5 +36,15 @@ function App() {
         </BrowserRouter>
     );
 }
+
+const styles = {
+    nav: {
+        padding: "15px",
+        background: "#1e293b",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+    }
+};
 
 export default App;

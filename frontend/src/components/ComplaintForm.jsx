@@ -1,128 +1,116 @@
 import { useState } from "react";
+import axios from "axios";
 
-import API from "../api";
-
-function ComplaintForm({ refresh }) {
+function ComplaintForm({ onSuccess }) {
 
     const [form, setForm] = useState({
-
         name: "",
         email: "",
         title: "",
         description: "",
         category: "",
         location: ""
-
     });
 
     const handleChange = (e) => {
-
         setForm({
-
             ...form,
-
-            [e.target.name]:
-            e.target.value
-
+            [e.target.name]: e.target.value
         });
     };
 
-    const handleSubmit =
-    async (e) => {
-
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
+            const token = localStorage.getItem("token");
 
-            await API.post(
-                "/api/complaints",
-                form
+            await axios.post(
+                "https://ai-based-smart-complaint-management-ao3p.onrender.com/api/complaints",
+                form,
+                {
+                    headers: {
+                        Authorization: token
+                    }
+                }
             );
 
-            alert(
-                "Complaint Submitted"
-            );
+            alert("Complaint Submitted Successfully");
 
             setForm({
-
                 name: "",
                 email: "",
                 title: "",
                 description: "",
                 category: "",
                 location: ""
-
             });
 
-            refresh();
+            if (onSuccess) onSuccess();
 
         } catch (err) {
-
             console.log(err);
-
-            alert("Error");
+            alert("Failed to submit complaint");
         }
     };
 
     return (
+        <div className="card">
 
-        <form
-            className="form"
-            onSubmit={handleSubmit}
-        >
+            <h2>Submit Complaint</h2>
 
-            <input
-                type="text"
-                name="name"
-                placeholder="Name"
-                value={form.name}
-                onChange={handleChange}
-            />
+            <form onSubmit={handleSubmit}>
 
-            <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={handleChange}
-            />
+                <input
+                    name="name"
+                    placeholder="Your Name"
+                    value={form.name}
+                    onChange={handleChange}
+                />
 
-            <input
-                type="text"
-                name="title"
-                placeholder="Complaint Title"
-                value={form.title}
-                onChange={handleChange}
-            />
+                <input
+                    name="email"
+                    placeholder="Email"
+                    value={form.email}
+                    onChange={handleChange}
+                />
 
-            <textarea
-                name="description"
-                placeholder="Description"
-                value={form.description}
-                onChange={handleChange}
-            />
+                <input
+                    name="title"
+                    placeholder="Title"
+                    value={form.title}
+                    onChange={handleChange}
+                    required
+                />
 
-            <input
-                type="text"
-                name="category"
-                placeholder="Category"
-                value={form.category}
-                onChange={handleChange}
-            />
+                <textarea
+                    name="description"
+                    placeholder="Description"
+                    value={form.description}
+                    onChange={handleChange}
+                />
 
-            <input
-                type="text"
-                name="location"
-                placeholder="Location"
-                value={form.location}
-                onChange={handleChange}
-            />
+                <input
+                    name="category"
+                    placeholder="Category (Electricity, Water, etc.)"
+                    value={form.category}
+                    onChange={handleChange}
+                />
 
-            <button type="submit">
-                Submit Complaint
-            </button>
+                <input
+                    name="location"
+                    placeholder="Location"
+                    value={form.location}
+                    onChange={handleChange}
+                />
 
-        </form>
+                <button type="submit">
+                    Submit Complaint
+                </button>
+
+            </form>
+
+        </div>
     );
 }
 

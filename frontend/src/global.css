@@ -1,0 +1,345 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+}
+
+.card {
+    background: #1e293b;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    margin-bottom: 15px;
+}
+
+button {
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0b1220;
+    color: white;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a; /* Main Dark Slate Background */
+    color: white;
+}
+
+/* Auth Pages Wrapper */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Modern Dark Theme Form Card */
+.form {
+    background: #1e293b; /* Dark card color - matches your global dashboard */
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form h2 {
+    margin: 0 0 10px 0;
+    text-align: center;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+/* Input Group Container */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #94a3b8; /* Dimmer grey text for labels */
+}
+
+/* Inputs styled correctly for dark background */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box; /* Crucial to prevent inputs from bursting out of the container */
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0b1220;
+    color: white;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: 2px solid #2563eb;
+    border-color: transparent;
+}
+
+/* Buttons */
+button {
+    border: none;
+    padding: 12px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.2s ease;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+/* Bottom Links styling */
+.auth-redirect {
+    text-align: center;
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 10px;
+}
+
+.auth-redirect a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.auth-redirect a:hover {
+    text-decoration: underline;
+}
+
+
+/* ==========================================================
+   GLASSMORPHISM & HOVER EFFECTS (Add/Update in your CSS)
+   ========================================================== */
+
+/* The Main Page Background - enhanced with a subtle deep gradient */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top right, #1e293b, #0f172a 80%);
+    min-height: 100vh;
+    color: white;
+}
+
+/* Translucent Glass Navbar */
+.navbar {
+    background: rgba(15, 23, 42, 0.6) !important; /* Translucent dark */
+    backdrop-filter: blur(12px); /* Blurred glass effect */
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Soft border reflection */
+    padding: 15px 30px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Glassmorphic Cards (Form Containers & Complaint Cards) */
+.card, [style*="background: #1e293b"], [style*="background:#1e293b"] {
+    background: rgba(30, 41, 59, 0.4) !important; /* See-through surface */
+    backdrop-filter: blur(16px); /* Strong glass blur */
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Highlight edge */
+    border-radius: 16px !important; /* Smoother rounded corners */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    padding: 24px !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; /* Snappy, premium transition */
+}
+
+/* Elevating Hover Effect for Cards */
+.card:hover, [style*="background: #1e293b"]:hover {
+    transform: translateY(-5px); /* Smoothly lifts up */
+    border-color: rgba(37, 99, 235, 0.4); /* Border glows blue on hover */
+    box-shadow: 0 12px 40px 0 rgba(37, 99, 235, 0.15); /* Soft blue neon under-glow */
+}
+
+/* Micro-interactions for Inputs */
+input, textarea {
+    background: rgba(11, 18, 32, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+    background: rgba(11, 18, 32, 0.8) !important;
+}
+
+/* Interactive Buttons with Glow Effects */
+button {
+    background: #2563eb;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+button:hover {
+    background: #1d4ed8 !important;
+    transform: scale(1.02); /* Slight click-me expansion */
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); /* Vibrant shadow expansion */
+}
+
+button:active {
+    transform: scale(0.98); /* Sinks slightly when pressed */
+}
+
+/* Translucent Collapsible AI Box */
+[style*="backgroundColor: #0b1220"], [style*="background: #0b1220"] {
+    background: rgba(11, 18, 32, 0.5) !important;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 12px !important;
+}
+
+
+/* ==========================================================
+   AUTH GLASSMORPHISM & TRANSITION EFFECTS
+   ========================================================== */
+
+/* Fullscreen Centered Wrapper */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+}
+
+/* Translucent Glass Auth Card */
+.form {
+    background: rgba(30, 41, 59, 0.4) !important; /* Semi-transparent Slate */
+    backdrop-filter: blur(16px); /* Premium frosted-glass blur */
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Highlighted edge reflection */
+    padding: 40px !important;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    /* Snappy, springy transition timing function */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease !important;
+}
+
+/* Glow & Lift Hover Effect for Login/Signup Form */
+.form:hover {
+    transform: translateY(-6px) scale(1.01); /* Lifts up and expands slightly */
+    border-color: rgba(37, 99, 235, 0.4); /* Border glows blue */
+    box-shadow: 0 15px 45px rgba(37, 99, 235, 0.15); /* Soft neon under-glow */
+}
+
+/* Header Text Inside Form */
+.form h2 {
+    margin: 0 0 10px 0;
+    text-align: center;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Inputs styled with dark glass fill */
+.form input {
+    width: 100%;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(11, 18, 32, 0.6);
+    color: white;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+/* Input Focus State */
+.form input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.3);
+    background: rgba(11, 18, 32, 0.8);
+}
+
+/* Submit Buttons with Active Micro-Interactions */
+.form button {
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    transition: all 0.2s ease !important;
+}
+
+.form button:hover {
+    background: #1d4ed8;
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.form button:active {
+    transform: scale(0.98);
+}
+
+/* Bottom Switch Text & Interactive Links */
+.auth-redirect {
+    text-align: center;
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 5px;
+}
+
+.auth-redirect a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+    transition: color 0.2s ease;
+}
+
+.auth-redirect a:hover {
+    color: #60a5fa;
+    text-decoration: underline;
+}

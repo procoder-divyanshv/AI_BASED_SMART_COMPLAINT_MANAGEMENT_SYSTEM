@@ -1,102 +1,56 @@
 import { useState } from "react";
-
-import {
-    Link,
-    useNavigate
-} from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import API from "../api";
 
 function Login() {
-
     const navigate = useNavigate();
-
-    const [form, setForm] = useState({
-
-        email: "",
-        password: ""
-
-    });
+    const [form, setForm] = useState({ email: "", password: "" });
 
     const handleChange = (e) => {
-
-        setForm({
-
-            ...form,
-
-            [e.target.name]:
-            e.target.value
-
-        });
+        setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit =
-    async (e) => {
-
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-
-            const res =
-                await API.post(
-                    "/api/auth/login",
-                    form
-                );
-
-            localStorage.setItem(
-                "token",
-                res.data.token
-            );
-
+            const res = await API.post("/api/auth/login", form);
+            localStorage.setItem("token", res.data.token);
             navigate("/dashboard");
-
         } catch (err) {
-
             alert("Login Failed");
         }
     };
 
     return (
-
         <div className="container">
-
-            <form
-                className="form"
-                onSubmit={handleSubmit}
-            >
-
+            <form className="form" onSubmit={handleSubmit}>
                 <h2>Login</h2>
 
                 <input
                     type="email"
                     name="email"
                     placeholder="Email"
+                    value={form.email}
                     onChange={handleChange}
+                    required
                 />
 
                 <input
                     type="password"
                     name="password"
                     placeholder="Password"
+                    value={form.password}
                     onChange={handleChange}
+                    required
                 />
 
-                <button type="submit">
-                    Login
-                </button>
+                <button type="submit">Login</button>
 
-                <p>
-
-                    Don't have account?
-
-                    <Link to="/signup">
-                        Signup
-                    </Link>
-
+                <p className="auth-redirect">
+                    Don't have an account? 
+                    <Link to="/signup">Signup</Link>
                 </p>
-
             </form>
-
         </div>
     );
 }

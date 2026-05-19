@@ -19,7 +19,7 @@ function Navbar() {
         <div className="navbar">
 
             <h2>
-                AI Complaint System
+                AI-Based Complaint Management System
             </h2>
 
             <button onClick={logout}>
