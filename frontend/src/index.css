@@ -1,0 +1,50 @@
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.form{
+    background:white;
+    padding:20px;
+    width:350px;
+    border-radius:10px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.form input,
+.form textarea{
+    padding:10px;
+}
+
+.form button{
+    padding:10px;
+    background:black;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+.navbar{
+    background:black;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.card{
+    background:white;
+    margin:20px;
+    padding:20px;
+    border-radius:10px;
+}
