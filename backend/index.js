@@ -12,9 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/* =========================
-   OPENROUTER CONFIG
-========================= */
+ 
 
 const client = new OpenAI({
     baseURL: "https://openrouter.ai/api/v1",
@@ -25,25 +23,18 @@ const client = new OpenAI({
     }
 });
 
-/* =========================
-   DATABASE CONNECTION
-========================= */
+ 
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log("Mongo Error:", err));
-
-/* =========================
-   HOME ROUTE
-========================= */
+ 
 
 app.get("/", (req, res) => {
     res.send("Backend Running Successfully");
 });
 
-/* =========================
-   USER SCHEMA
-========================= */
+ 
 
 const UserSchema = new mongoose.Schema({
     name: String,
@@ -52,10 +43,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("User", UserSchema);
-
-/* =========================
-   COMPLAINT SCHEMA
-========================= */
+ 
 
 const ComplaintSchema = new mongoose.Schema({
     name: String,
@@ -75,10 +63,7 @@ const ComplaintSchema = new mongoose.Schema({
 });
 
 const Complaint = mongoose.model("Complaint", ComplaintSchema);
-
-/* =========================
-   JWT MIDDLEWARE
-========================= */
+ 
 
 const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization;
@@ -96,9 +81,7 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
-/* =========================
-   AI ANALYZER FUNCTION (UPDATED)
-========================= */
+ 
 
 const analyzeComplaint = async (text = "") => {
     try {
@@ -169,9 +152,7 @@ function fillTemplate(text, data) {
         return data[key.trim()] || "Customer";
     });
 }
-/* =========================
-   AUTH ROUTES
-========================= */
+ 
 
 // SIGNUP
 app.post("/api/auth/signup", async (req, res) => {
@@ -227,9 +208,7 @@ app.post("/api/auth/login", async (req, res) => {
     }
 });
 
-/* =========================
-   COMPLAINT ROUTES
-========================= */
+ 
 
 // ADD COMPLAINT
 app.post("/api/complaints", authMiddleware, async (req, res) => {
@@ -360,10 +339,7 @@ app.get("/api/complaints/search", authMiddleware, async (req, res) => {
     }
 });
 
-/* =========================
-   AI ANALYZER ROUTE
-========================= */
-
+ 
 app.post("/api/ai/analyze", authMiddleware, async (req, res) => {
     try {
         const result = await analyzeComplaint(req.body.text);
@@ -374,10 +350,7 @@ app.post("/api/ai/analyze", authMiddleware, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
-/* =========================
-   START SERVER
-========================= */
+ 
 
 const PORT = process.env.PORT || 5000;
 

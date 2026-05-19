@@ -90,9 +90,7 @@ function ComplaintList({ complaints }) {
     );
 }
 
-/* =========================
-   STYLES
-========================= */
+
 
 const styles = {
     container: {
@@ -107,7 +105,7 @@ const styles = {
         fontWeight: "700"
     },
 
-    // 1. Modified to let the CSS class control properties like transitions and background blends
+
     card: {
         padding: "20px",
         marginBottom: "20px",
@@ -163,7 +161,7 @@ const styles = {
         color: "#fff"
     },
 
-    // 2. Adjusted for internal transparency
+
     aiBox: {
         marginTop: "15px",
         padding: "16px",
