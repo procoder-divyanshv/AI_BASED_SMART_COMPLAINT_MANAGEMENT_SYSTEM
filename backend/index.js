@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const OpenAI = require("openai");
+
 require("dotenv").config();
 
 const app = express();
@@ -10,37 +12,67 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/* =========================
+   OPENROUTER CONFIG
+========================= */
 
-require("dotenv").config();
+const client = new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.OPENROUTER_API_KEY
+});
 
-
+/* =========================
+   DATABASE CONNECTION
+========================= */
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
 .catch(err => console.log("Mongo Error:", err));
 
+/* =========================
+   HOME ROUTE
+========================= */
 
+app.get("/", (req, res) => {
+    res.send("Backend Running Successfully");
+});
+
+/* =========================
+   USER SCHEMA
+========================= */
 
 const UserSchema = new mongoose.Schema({
     name: String,
+
     email: {
         type: String,
         unique: true
     },
+
     password: String
 });
 
 const User = mongoose.model("User", UserSchema);
 
+/* =========================
+   COMPLAINT SCHEMA
+========================= */
+
 const ComplaintSchema = new mongoose.Schema({
+
     name: String,
+
     email: String,
+
     title: {
         type: String,
         required: true
     },
+
     description: String,
+
     category: String,
+
     location: String,
 
     status: {
@@ -48,85 +80,112 @@ const ComplaintSchema = new mongoose.Schema({
         default: "Pending"
     },
 
-    aiPriority: String,
-    aiDepartment: String,
-    aiSummary: String,
     aiResponse: String,
 
     createdAt: {
         type: Date,
         default: Date.now
     }
+
 });
 
-const Complaint = mongoose.model("Complaint", ComplaintSchema);
+const Complaint = mongoose.model(
+    "Complaint",
+    ComplaintSchema
+);
 
-
+/* =========================
+   JWT MIDDLEWARE
+========================= */
 
 const authMiddleware = (req, res, next) => {
 
     const token = req.headers.authorization;
 
     if (!token) {
+
         return res.status(401).json({
             message: "Access Denied"
         });
+
     }
 
     try {
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
+
+        const verified = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
+
         req.user = verified;
+
         next();
+
     } catch (err) {
+
         res.status(400).json({
             message: "Invalid Token"
         });
+
     }
 };
 
+/* =========================
+   AI ANALYZER FUNCTION
+========================= */
 
-const analyzeComplaint = (text="") => {
+const analyzeComplaint = async (text = "") => {
 
-    let priority = "Low";
-    let department = "General";
-    let response = "Your complaint has been registered.";
-    let summary = text.substring(0, 80);
+    try {
 
-    const lower = text.toLowerCase();
+        const completion =
+            await client.chat.completions.create({
 
-    if (lower.includes("water")) {
-        department = "Water Department";
+            model: "mistralai/mistral-7b-instruct:free",
+
+            messages: [
+
+                {
+                    role: "system",
+
+                    content:
+                    `You are an AI Complaint Analyzer.
+
+                    Analyze the complaint and provide:
+
+                    1. Priority
+                    2. Department
+                    3. Short Summary
+                    4. Professional Response
+
+                    Keep response clean and professional.`
+                },
+
+                {
+                    role: "user",
+                    content: text
+                }
+
+            ]
+
+        });
+
+        return completion
+            .choices[0]
+            .message
+            .content;
+
+    } catch (err) {
+
+        console.log("AI Error:", err);
+
+        return "AI Analysis Failed";
     }
-
-    if (lower.includes("electricity")) {
-        department = "Electricity Department";
-        priority = "High";
-    }
-
-    if (lower.includes("garbage")) {
-        department = "Sanitation Department";
-    }
-
-    if (
-        lower.includes("urgent") ||
-        lower.includes("danger") ||
-        lower.includes("fire")
-    ) {
-        priority = "High";
-    }
-
-    response =
-        `Complaint received. ${department} will contact you soon.`;
-
-    return {
-        priority,
-        department,
-        response,
-        summary
-    };
 };
 
-
+/* =========================
+   AUTH ROUTES
+========================= */
 
 // SIGNUP
 
@@ -136,12 +195,15 @@ app.post("/api/auth/signup", async (req, res) => {
 
         const { name, email, password } = req.body;
 
-        const existingUser = await User.findOne({ email });
+        const existingUser =
+            await User.findOne({ email });
 
         if (existingUser) {
+
             return res.status(400).json({
                 message: "User already exists"
             });
+
         }
 
         const hashedPassword =
@@ -176,31 +238,43 @@ app.post("/api/auth/login", async (req, res) => {
 
         const { email, password } = req.body;
 
-        const user = await User.findOne({ email });
+        const user =
+            await User.findOne({ email });
 
         if (!user) {
+
             return res.status(400).json({
                 message: "User not found"
             });
+
         }
 
         const validPassword =
-            await bcrypt.compare(password, user.password);
+            await bcrypt.compare(
+                password,
+                user.password
+            );
 
         if (!validPassword) {
+
             return res.status(401).json({
                 message: "Invalid Password"
             });
+
         }
 
         const token = jwt.sign(
+
             {
                 id: user._id
             },
+
             process.env.JWT_SECRET,
+
             {
                 expiresIn: "1d"
             }
+
         );
 
         res.json({
@@ -216,7 +290,9 @@ app.post("/api/auth/login", async (req, res) => {
     }
 });
 
-
+/* =========================
+   COMPLAINT ROUTES
+========================= */
 
 // ADD COMPLAINT
 
@@ -237,15 +313,21 @@ app.post(
         } = req.body;
 
         if (!title) {
+
             return res.status(400).json({
                 message: "Title is required"
             });
+
         }
 
-        const aiResult =
-            analyzeComplaint(description);
+        /* AI ANALYSIS */
 
-        const complaint = new Complaint({
+        const aiResult =
+            await analyzeComplaint(description);
+
+        const complaint =
+            new Complaint({
+
             name,
             email,
             title,
@@ -253,17 +335,19 @@ app.post(
             category,
             location,
 
-            aiPriority: aiResult.priority,
-            aiDepartment: aiResult.department,
-            aiSummary: aiResult.summary,
-            aiResponse: aiResult.response
+            aiResponse: aiResult
+
         });
 
         await complaint.save();
 
         res.json({
-            message: "Complaint Added Successfully",
+
+            message:
+            "Complaint Added Successfully",
+
             complaint
+
         });
 
     } catch (err) {
@@ -307,16 +391,32 @@ app.put(
 
     try {
 
+        if (
+            !mongoose.Types.ObjectId.isValid(
+                req.params.id
+            )
+        ) {
+
+            return res.status(400).json({
+                message: "Invalid Complaint ID"
+            });
+
+        }
+
         const complaint =
             await Complaint.findByIdAndUpdate(
-                req.params.id,
-                {
-                    status: req.body.status
-                },
-                {
-                    new: true
-                }
-            );
+
+            req.params.id,
+
+            {
+                status: req.body.status
+            },
+
+            {
+                new: true
+            }
+
+        );
 
         res.json(complaint);
 
@@ -343,11 +443,13 @@ app.get(
 
         const complaints =
             await Complaint.find({
-                location: {
-                    $regex: location,
-                    $options: "i"
-                }
-            });
+
+            location: {
+                $regex: location,
+                $options: "i"
+            }
+
+        });
 
         res.json(complaints);
 
@@ -360,23 +462,45 @@ app.get(
     }
 });
 
-
+/* =========================
+   AI ANALYZER ROUTE
+========================= */
 
 app.post(
     "/api/ai/analyze",
     authMiddleware,
-    (req, res) => {
+    async (req, res) => {
 
-    const result =
-        analyzeComplaint(req.body.text);
+    try {
 
-    res.json(result);
+        const result =
+            await analyzeComplaint(
+                req.body.text
+            );
+
+        res.json({
+            result
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
 });
 
-
+/* =========================
+   START SERVER
+========================= */
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`);
+
+    console.log(
+        `Server running on ${PORT}`
+    );
+
 });
