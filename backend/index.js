@@ -17,8 +17,20 @@ app.use(express.json());
 ========================= */
 
 const client = new OpenAI({
+
     baseURL: "https://openrouter.ai/api/v1",
-    apiKey: process.env.OPENROUTER_API_KEY
+
+    apiKey: process.env.OPENROUTER_API_KEY,
+
+    defaultHeaders: {
+
+        "HTTP-Referer":
+        "https://your-render-app.onrender.com",
+
+        "X-Title":
+        "AI Complaint Management System"
+    }
+
 });
 
 /* =========================
@@ -141,13 +153,12 @@ const analyzeComplaint = async (text = "") => {
         const completion =
             await client.chat.completions.create({
 
-            model: "mistralai/mistral-7b-instruct:free",
+            model: "openai/gpt-oss-20b:free",
 
             messages: [
 
                 {
                     role: "system",
-
                     content:
                     `You are an AI Complaint Analyzer.
 
@@ -155,10 +166,8 @@ const analyzeComplaint = async (text = "") => {
 
                     1. Priority
                     2. Department
-                    3. Short Summary
-                    4. Professional Response
-
-                    Keep response clean and professional.`
+                    3. Summary
+                    4. Professional Response`
                 },
 
                 {
@@ -166,9 +175,13 @@ const analyzeComplaint = async (text = "") => {
                     content: text
                 }
 
-            ]
+            ],
+
+            max_tokens: 200
 
         });
+
+        console.log(completion.choices[0].message.content);
 
         return completion
             .choices[0]
@@ -177,7 +190,10 @@ const analyzeComplaint = async (text = "") => {
 
     } catch (err) {
 
-        console.log("AI Error:", err);
+        console.log(
+            "FULL AI ERROR:",
+            err.response?.data || err.message
+        );
 
         return "AI Analysis Failed";
     }
